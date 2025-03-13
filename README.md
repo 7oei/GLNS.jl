@@ -21,19 +21,23 @@ The GLNS solver and its settings are described in the following paper
 Please cite this paper when using GLNS.
 
 
-## Using the solver
-
-The solver can be run from the command line or from the Julia REPL.
-
 ### Installation
 
 Begin by installing Julia v1.0 or higher from <http://julialang.org/>.
-
+おそらく以下のコマンドでインストール可能
+```bash
+curl -fsSL https://install.julialang.org | sh
+```
+juliaいれたら環境変数変わってるから一度ターミナル再起動して以下のコマンドで立ち上げ
+```bash
+julia
+```
 GLNS can then be installed through the Julia package manager:
 ```julia
 julia> using Pkg
 julia> Pkg.add("GLNS")
 ```
+ココまでやったら後は**Running from the command line**に従えばok
 
 Once installed, import the package and run as follows:
 ```julia
