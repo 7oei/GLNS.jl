@@ -245,13 +245,15 @@ function initial_tour!(lowest::Tour, dist::Array{Int64, 2}, sets::Array{Any, 1},
 	if param[:init_tour] == "rand" && (trial_num > 1) && (rand() < 0.5)
 		random_initial_tour!(best.tour, sets_to_insert, dist, sets)
 	else
-		random_insertion!(best.tour, sets_to_insert, dist, sets, setdist)
+		random_initial_tour!(best.tour, sets_to_insert, dist, sets)
+		#random_insertion!(best.tour, sets_to_insert, dist, sets, setdist)#いずれはブラックリスト使ってこれできるように変更する
 	end
 	best.cost = tour_cost(best.tour, dist)
-	if lowest.cost > best.cost 
+	if lowest.cost > best.cost
 		lowest.cost = best.cost
 		lowest.tour = best.tour
 	end
+	println("initial_tour!:",best.cost)
 	return best
 end
 
@@ -274,21 +276,75 @@ function random_insertion!(tour::Array{Int64,1}, sets_to_insert::Array{Int64,1},
         # now, perform the insertion
         insert!(tour, best_position, best_vertex)
     end
+	println("random_insertion:", tour_cost(tour, dist))
 end
+# 部分変更だけでは制約を満たせない時ループを終わることができない
+# function random_insertion!(tour::Array{Int64,1}, sets_to_insert::Array{Int64,1},
+# 						   dist::Array{Int64, 2}, sets::Array{Any, 1}, setdist::Distsv)
+# 	local temp_tour = Int64[]
+	
+# 	# 制約を満たすまで繰り返し
+# 	while true
+# 		empty!(temp_tour)
+# 		temp_tour = tour
+# 		shuffle!(sets_to_insert)
+
+# 		for set in sets_to_insert
+# 			# only have to compute the insert cost for the changed portion of the temp_tour
+# 			if isempty(temp_tour)
+# 				best_vertex = rand(sets[set])
+# 				best_position = 1
+# 			else
+# 				best_vertex, best_position = insert_lb(temp_tour, dist, sets[set], set, setdist, 0.75)
+# 			end
+# 			# now, perform the insertion
+# 			insert!(temp_tour, best_position, best_vertex)
+# 		end
+
+# 		# コストを確認し、制約を満たせば終了
+# 		if tour_cost(temp_tour, dist) > 80
+# 			break
+# 		end
+# 	end
+
+# 	println("random_insertion:", tour_cost(temp_tour, dist))
+# 	# 完成した初期解を返す
+# 	append!(tour, temp_tour)
+# end
 
 
 """
 Randomly shuffle the sets, and then insert the best vertex from each set back into
 the tour where sets are considered in shuffled order.
 """
+# function random_initial_tour!(tour::Array{Int64,1}, sets_to_insert::Array{Int64,1},
+# 							  dist::Array{Int64, 2}, sets::Array{Any, 1})
+#     shuffle!(sets_to_insert)
+#     for set in sets_to_insert
+# 		push!(tour, rand(sets[set]))
+#     end
+# end
+
 function random_initial_tour!(tour::Array{Int64,1}, sets_to_insert::Array{Int64,1},
 							  dist::Array{Int64, 2}, sets::Array{Any, 1})
-    shuffle!(sets_to_insert)
-    for set in sets_to_insert
-		push!(tour, rand(sets[set]))
-    end
-end
+local temp_tour = Int64[]
+# Loop until generated tour meets minimum cost constraint
+while true
+	empty!(temp_tour)
+	shuffle!(sets_to_insert)
+	for set in sets_to_insert
+		push!(temp_tour, rand(sets[set]))
+	end
 
+	if tour_cost(temp_tour, dist) > 80
+		break  # Acceptable tour found
+	end
+end
+println("random_initial:",tour_cost(temp_tour, dist))
+
+# Copy valid tour to output
+append!(tour, temp_tour)
+end
 
 ######################### Removals ################################
 """

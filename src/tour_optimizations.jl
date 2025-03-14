@@ -144,7 +144,7 @@ function reopt_tour(tour::Array{Int64,1}, dist::Array{Int64,2}, sets::Array{Any,
         end
         # find the cost back to the start vertex.
         tour_cost, start_prev = relax(cost_to_come, dist, sets[member[tour[end]]], start_vertex)
-        if tour_cost < best_tour_cost   # reconstruct the path
+        if tour_cost < best_tour_cost && 80 < tour_cost  # reconstruct the path
 			best_tour_cost = tour_cost
             new_tour = extract_tour(prev, start_vertex, start_prev)
         end

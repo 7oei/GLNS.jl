@@ -388,6 +388,7 @@ end
 function print_params(param::Dict{Symbol,Any})
 	if param[:print_output] > 0
 		println("\n", "--------- Problem Data ------------")
+        # println("solver------------------------------------------------------------------------------------------")
 		println("Instance Name      : ", param[:problem_instance])
 	    println("Number of Vertices : ", param[:num_vertices])
 	    println("Number of Sets     : ", param[:num_sets])

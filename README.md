@@ -38,6 +38,10 @@ julia> using Pkg
 julia> Pkg.add("GLNS")
 ```
 ココまでやったら後は**Running from the command line**に従えばok
+プログラムを編集して変更を反映させたい場合は
+```julia
+pkg> dev ~/GLNS.jl
+```
 
 Once installed, import the package and run as follows:
 ```julia

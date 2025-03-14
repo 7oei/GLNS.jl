@@ -85,6 +85,7 @@ end
 
 
 # running the code on the problem instance passed in via command line args.
+#println("cmd")
 problem_instance, optional_args = parse_cmd(ARGS)
 GLNS.solver(problem_instance; optional_args...)
 

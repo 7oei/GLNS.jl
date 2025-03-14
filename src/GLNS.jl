@@ -46,6 +46,7 @@ function solver(problem_instance; args...)
 	while count[:cold_trial] <= param[:cold_trials]
 		# build tour from scratch on a cold restart
 		best = initial_tour!(lowest, dist, sets, setdist, count[:cold_trial], param)
+		println("main_while_init:",best.cost)
 		# print_cold_trial(count, param, best)
 		phase = :early
 
@@ -81,7 +82,7 @@ function solver(problem_instance; args...)
 					param[:mode] == "slow" && opt_cycle!(trial, dist, sets, membership, param, setdist, "full")
 				    current = trial
 		        end
-		        if current.cost < best.cost
+		        if current.cost < best.cost && 80 < current.cost
 					count[:latest_improvement] = 1
 					count[:first_improvement] = true
 					if count[:cold_trial] > 1 && count[:warm_trial] > 1
